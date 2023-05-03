@@ -1,4 +1,5 @@
 require_relative 'mongo_client'
+require 'telegram/bot'
 TOKEN = ''
 
 MongoClient.not_reminded.each do |rem|

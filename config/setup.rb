@@ -9,6 +9,9 @@ end
 
 require 'telegram/bot'
 require 'date'
+require 'base64'
+require 'faraday'
+require 'faraday/multipart'
 
 # calendar
 require 'google/apis/calendar_v3'

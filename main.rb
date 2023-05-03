@@ -8,4 +8,7 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
       Client.new(bot: bot, message: message).perform
     end
   end
+rescue => e
+  # TODO add logger
+  retry
 end

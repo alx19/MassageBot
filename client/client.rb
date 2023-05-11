@@ -21,13 +21,13 @@ class Client
       russian_date = @message.text.sub('Записаться на ', '')
       slot = MongoClient.find_slot_by_russian_date(russian_date)
       if slot['state'] == 'reserved'
+        send_message(chat_id: @chat_id, text: 'Извините, данный слот уже занят :(')
+      else
         user = MongoClient.user_info(@chat_id)
         MongoClient.reserve_via_date_time(date: slot['date'], time: slot['time'], link: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a>", id: @chat_id)
         Calendar.add_event_to_calendar(slot['unix_timestamp'], "Массаж #{user['name']}", "t.me/#{user['username']}")
-        @bot.api.send_message(chat_id: @chat_id, text: 'Спасибо за запись! За день до массажа мы на помним вам о нем. Ждем вас на массаж :)')
-        @bot.api.send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a> записался на массаж #{russian_date}", parse_mode: 'HTML')
-      else
-        @bot.api.send_message(chat_id: @chat_id, text: 'Извините, данный слот уже занят :(')
+        send_message(chat_id: @chat_id, text: 'Спасибо за запись! За день до массажа мы на помним вам о нем. Ждем вас на массаж :)')
+        send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a> записался на массаж #{russian_date}", parse_mode: 'HTML')
       end
       show_options
     when 'Посмотреть расписание и записаться'

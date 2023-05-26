@@ -24,8 +24,7 @@ class GoogleCalendar
       )
 
       # Insert the event into the calendar
-      #calendar.insert_event('lfrdj8p2s6jcmrvs31r0vhbkic@group.calendar.google.com', event)
-      true
+      calendar.insert_event('lfrdj8p2s6jcmrvs31r0vhbkic@group.calendar.google.com', event)
     end
 
     private

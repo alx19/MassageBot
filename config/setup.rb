@@ -1,7 +1,7 @@
 files = %w[
   ../calendar ../client/path ../client/contraindications ../client/registation
   ../client/client ../russian_date ../mongo_client
-  ../master/slot ../master/master
+  ../master/slot ../master/master ../my_logger
 ]
 files.each do |file|
   require_relative file
@@ -16,6 +16,7 @@ require 'faraday/multipart'
 # calendar
 require 'google/apis/calendar_v3'
 require 'googleauth'
+require 'googleauth/stores/file_token_store'
 
 require 'i18n'
 

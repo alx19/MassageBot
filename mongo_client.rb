@@ -12,6 +12,14 @@ class MongoClient
       MONGO['slots'].find(date: date, time: time).to_a.first['unix_timestamp']
     end
 
+    def update_slot(datetime, new_time)
+      date, time = datetime.split
+      MONGO['slots'].update_one(
+        { date: date, time: time },
+        { '$set' => { time: new_time, russian_datetime: RussianDate.to_russian("#{date} #{new_time}") } }
+      )
+    end
+
     def schedule
       MONGO['slots'].find(
         {

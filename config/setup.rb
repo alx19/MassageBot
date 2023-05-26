@@ -1,5 +1,5 @@
 files = %w[
-  ../calendar ../client/path ../client/contraindications ../client/registation
+  ../google_calendar ../client/path ../client/contraindications ../client/registation
   ../client/client ../russian_date ../mongo_client
   ../master/slot ../master/master ../my_logger
 ]

@@ -1,4 +1,4 @@
-class Calendar
+class GoogleCalendar
   class << self
     def add_event_to_calendar(timestamp, event_name, note = '')
       # Setup the Calendar API
@@ -24,7 +24,8 @@ class Calendar
       )
 
       # Insert the event into the calendar
-      calendar.insert_event('lfrdj8p2s6jcmrvs31r0vhbkic@group.calendar.google.com', event)
+      #calendar.insert_event('lfrdj8p2s6jcmrvs31r0vhbkic@group.calendar.google.com', event)
+      true
     end
 
     private

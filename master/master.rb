@@ -5,16 +5,33 @@ class Master
 
   OPTIONS = %w[
     Добавить\ слот Показать\ записи Показать\ расписание
-    Записать\ человечка Разослать\ расписание Удалить\ слот
+    Записать\ человечка Разослать\ расписание Изменить\ слот
+    Удалить\ слот
   ].freeze
 
   def initialize(bot:, message:)
     @bot = bot
     @message = message
-    @text = message.text
   end
 
   def perform
+    case @message
+    when Telegram::Bot::Types::CallbackQuery
+      perform_callback
+    when Telegram::Bot::Types::Message
+      @text = @message.text
+      perform_message
+    end
+  end
+
+  def perform_callback
+    slot, time = @message.data.split(';')
+    MongoClient.update_slot(slot, time)
+    @bot.api.send_message(chat_id: MASTER_ID, text: 'Слот изменен')
+    show_options
+  end
+
+  def perform_message
     year = Time.now.year
     if @text.match?(Regexp.new(RussianDate::MONTHS.join('|')))
       choose_date
@@ -26,7 +43,7 @@ class Master
       choose_hour
     elsif @text.match?(/\d{2}\.\d{2}\.#{year} \d{1,2}$/)
       choose_minute
-    elsif @text.match?(/\d{2}\.\d{2}\.#{year} \d{1,2}:\d{1,2}$/)
+    elsif @text.match?(/^\d{2}\.\d{2}\.#{year} \d{1,2}:\d{1,2}$/)
       add_slot
     elsif @text == 'Показать расписание'
       active_slots = MongoClient.active_slots
@@ -64,6 +81,11 @@ class Master
       end
     elsif @text == 'Записать человечка'
       add_apointment
+    elsif @text == 'Изменить слот'
+      ask_for_change
+    elsif @text.match?('Изменить слот ')
+      slot = @text.sub('Изменить слот ', '')
+      ask_for_new_time(slot)
     elsif MongoClient.get_switch
       date, time = MongoClient.switch.split
       timestamp = MongoClient.reserve_via_date_time(date: date, time: time)
@@ -82,7 +104,3 @@ class Master
     @bot.api.send_message(chat_id: MASTER_ID, text: 'Что будете делать?', reply_markup: markup)
   end
 end
-
-__END__
-add_event_to_calendar(@message.data.to_i, 'Первый массаж!')
-@bot.api.send_message(chat_id: MASTER_ID, text: 'Запись создана')

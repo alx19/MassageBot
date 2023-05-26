@@ -79,7 +79,7 @@ class MongoClient
     def not_reminded
       MONGO['slots'].find(
         {
-          state: 'active',
+          state: 'reserved',
           reminded: false,
           id: { '$ne' => '' },
           unix_timestamp: { '$lt' => Time.now.utc.to_i + 86520}

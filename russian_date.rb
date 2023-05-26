@@ -6,7 +6,7 @@ class RussianDate
       today = Date.today
       m = MONTHS.index(month) + 1
       y = today.year
-      (Date.new(y, m, 1)..Date.new(y, m, -1)).map do |dt|
+      (Date.new(y, m, today.day)..Date.new(y, m, -1)).map do |dt|
         dt.strftime('%d.%m.%Y')
       end
     end

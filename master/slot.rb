@@ -24,10 +24,38 @@ module Slot
     @bot.api.send_message(chat_id: MASTER_ID, text: 'Выберите слот для записи?', reply_markup: markup)
   end
 
+  def ask_for_new_time(slot)
+    hours = (8..21).map(&:to_s)
+    minutes = %w(00 30)
+    kb = []
+    hours.each do |hour|
+      minutes.each do |minute|
+        time = "#{hour}:#{minute}"
+        kb << Telegram::Bot::Types::InlineKeyboardButton.new(
+          text: time,
+          callback_data: "#{slot};#{time}"
+        )
+      end
+    end
+    markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: kb.each_slice(5).to_a)
+    @bot.api.send_message(chat_id: MASTER_ID, text: 'Выберите новое время', reply_markup: markup)
+  end
+
+  def ask_for_change
+    kb = MongoClient.active_slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Изменить слот #{s['date']} #{s['time']}")] }
+    markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
+    @bot.api.send_message(chat_id: MASTER_ID, text: 'Какой слот хотите изменить?', reply_markup: markup)
+  end
+
   def push_schedule
     text = ['На связи Алиса и у меня появились новые слоты!', '']
-    MongoClient.not_pushed.each { |np| text << np['russian_datetime'] }
+    slots = MongoClient.not_pushed.map { |np| np['russian_datetime'] }
+    return unless slots.any?
+
+    text += slots
     MongoClient.show_users.each do |user|
+      next if user['id'] == MASTER_ID
+
       @bot.api.send_message(chat_id: user['id'], text: text.join("\n"))
     end
     MongoClient.set_pushed

@@ -70,7 +70,7 @@ class Client
     begin
       @bot.api.send_message(**data)
     rescue => e
-      MyLogger.new('messages_log.txt').log(e)
+      MyLogger.new('messages_log.txt').log_error(e)
     end
   end
 

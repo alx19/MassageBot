@@ -6,7 +6,7 @@ class Master
   OPTIONS = %w[
     Добавить\ слот Показать\ записи Показать\ расписание
     Записать\ человечка Разослать\ расписание Изменить\ слот
-    Удалить\ слот
+    Удалить\ слот Удалить\ запись
   ].freeze
 
   def initialize(bot:, message:)
@@ -25,9 +25,15 @@ class Master
   end
 
   def perform_callback
-    slot, time = @message.data.split(';')
-    MongoClient.update_slot(slot, time)
-    @bot.api.send_message(chat_id: MASTER_ID, text: 'Слот изменен')
+    if @message.data.start_with?('Удалить')
+      _command, slot = @message.data.split(';')
+      MongoClient.reset_slot(slot)
+      @bot.api.send_message(chat_id: MASTER_ID, text: "Запись #{slot} удалена")
+    else
+      slot, time = @message.data.split(';')
+      MongoClient.update_slot(slot, time)
+      @bot.api.send_message(chat_id: MASTER_ID, text: 'Слот изменен')
+    end
     show_options
   end
 
@@ -67,6 +73,8 @@ class Master
       choose_month
     elsif @text == 'Удалить слот'
       remove_slot
+    elsif @text == 'Удалить запись'
+      clear_slot
     elsif @text == 'Разослать расписание'
       push_schedule
     elsif @text.match?('Удалить \d{1,2}')

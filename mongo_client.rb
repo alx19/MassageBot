@@ -57,6 +57,13 @@ class MongoClient
       )
     end
 
+    def reset_slot(russian_datetime)
+      MONGO['slots'].update_one(
+        { russian_datetime: russian_datetime },
+        { '$set' => { state: 'active', id: nil, link: nil } }
+      )
+    end
+
     def active_slots
       MONGO['slots'].find(
         {

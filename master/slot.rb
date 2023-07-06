@@ -41,6 +41,23 @@ module Slot
     @bot.api.send_message(chat_id: MASTER_ID, text: 'Выберите новое время', reply_markup: markup)
   end
 
+  def clear_slot
+    schedule = MongoClient.schedule
+    if schedule.any?
+      kb = []
+      MongoClient.schedule.each do |slot|
+        kb << Telegram::Bot::Types::InlineKeyboardButton.new(
+          text: slot['russian_datetime'],
+          callback_data: "Удалить;#{slot['russian_datetime']}"
+        )
+      end
+      markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: kb.each_slice(5).to_a)
+      @bot.api.send_message(chat_id: MASTER_ID, text: 'Какую запись хотите удалить?', reply_markup: markup)
+    else
+      @bot.api.send_message(chat_id: MASTER_ID, text: 'Нет записей для удаления')
+    end
+  end
+
   def ask_for_change
     kb = MongoClient.active_slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Изменить слот #{s['date']} #{s['time']}")] }
     markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)

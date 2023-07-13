@@ -25,7 +25,8 @@ class Client
       else
         user = MongoClient.user_info(@chat_id)
         unix_timestamp = MongoClient.reserve_via_date_time(date: slot['date'], time: slot['time'], link: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a>", id: @chat_id)
-        GoogleCalendar.add_event_to_calendar(unix_timestamp, "Массаж #{user['name']}", "t.me/#{user['username']}")
+        result = GoogleCalendar.add_event_to_calendar(unix_timestamp, "Массаж #{user['name']}", "t.me/#{user['username']}")
+        MongoClient.add_calendar_event_id({ unix_timestamp: unix_timestamp }, result.id)
         send_message(chat_id: @chat_id, text: 'Спасибо за запись! За день до массажа мы на помним вам о нем. Ждем вас на массаж :)')
         send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a> записался на массаж #{russian_date}", parse_mode: 'HTML')
       end

@@ -29,6 +29,13 @@ class MongoClient
       ).to_a
     end
 
+    def add_calendar_event_id(find, event_id)
+      MONGO['slots'].update_one(
+        find,
+        { '$set' => { event_id: event_id } }
+      )
+    end
+
     def show_users
       MONGO['users'].find.to_a
     end
@@ -60,8 +67,12 @@ class MongoClient
     def reset_slot(russian_datetime)
       MONGO['slots'].update_one(
         { russian_datetime: russian_datetime },
-        { '$set' => { state: 'active', id: nil, link: nil } }
+        { '$set' => { state: 'active', id: nil, link: nil, event_id: nil } }
       )
+    end
+
+    def get_event_id(find)
+      MONGO['slots'].find(find).to_a.first['event_id']
     end
 
     def active_slots

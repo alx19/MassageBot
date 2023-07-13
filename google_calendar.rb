@@ -24,7 +24,15 @@ class GoogleCalendar
       )
 
       # Insert the event into the calendar
-      calendar.insert_event('lfrdj8p2s6jcmrvs31r0vhbkic@group.calendar.google.com', event)
+      calendar.insert_event(CALENDAR_ID, event)
+    end
+
+    def delete_event(event_id)
+      return unless event_id
+
+      calendar = Google::Apis::CalendarV3::CalendarService.new
+      googleauth(calendar)
+      calendar.delete_event(CALENDAR_ID, event_id)
     end
 
     private

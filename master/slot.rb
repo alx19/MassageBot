@@ -51,10 +51,11 @@ module Slot
           callback_data: "Удалить;#{slot['russian_datetime']}"
         )
       end
-      markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: kb.each_slice(5).to_a)
+      markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: kb.each_slice(2).to_a)
       @bot.api.send_message(chat_id: MASTER_ID, text: 'Какую запись хотите удалить?', reply_markup: markup)
     else
       @bot.api.send_message(chat_id: MASTER_ID, text: 'Нет записей для удаления')
+      show_options
     end
   end
 
@@ -76,6 +77,8 @@ module Slot
       @bot.api.send_message(chat_id: user['id'], text: text.join("\n"))
     end
     MongoClient.set_pushed
+    @bot.api.send_message(chat_id: MASTER_ID, text: 'Расписание разослано!', reply_markup: markup)
+    show_options
   end
 
   private

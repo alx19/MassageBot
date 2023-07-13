@@ -27,6 +27,8 @@ class Master
   def perform_callback
     if @message.data.start_with?('Удалить')
       _command, slot = @message.data.split(';')
+      event_id = MongoClient.get_event_id({russian_datetime: slot})
+      GoogleCalendar.delete_event(event_id)
       MongoClient.reset_slot(slot)
       @bot.api.send_message(chat_id: MASTER_ID, text: "Запись #{slot} удалена")
     else
@@ -96,8 +98,9 @@ class Master
       ask_for_new_time(slot)
     elsif MongoClient.get_switch
       date, time = MongoClient.switch.split
-      timestamp = MongoClient.reserve_via_date_time(date: date, time: time)
-      GoogleCalendar.add_event_to_calendar(timestamp, 'Массаж', @text)
+      unix_timestamp = MongoClient.reserve_via_date_time(date: date, time: time)
+      result = GoogleCalendar.add_event_to_calendar(unix_timestamp, 'Массаж', @text)
+      MongoClient.add_calendar_event_id({ unix_timestamp: unix_timestamp }, result.id)
       @bot.api.send_message(chat_id: MASTER_ID, text: 'Запись создана')
     else
       show_options

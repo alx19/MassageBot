@@ -4,7 +4,8 @@ class Client
   include Registration
 
   OPTIONS = %w[
-    Посмотреть\ расписание\ и\ записаться Схема\ проезда
+    Посмотреть\ расписание\ и\ записаться
+    Мои\ записи Схема\ проезда
     Отменить\ запись Противопоказания
   ]
 
@@ -47,6 +48,9 @@ class Client
     when 'Противопоказания'
       send_contraindications
       show_options
+    when 'Мои записи'
+      show_my_appointments
+      show_options
     when 'Назад'
       show_options
     when 'Отменить запись'
@@ -79,5 +83,17 @@ class Client
     kb = OPTIONS.map { |o| [Telegram::Bot::Types::KeyboardButton.new(text: o)] }
     markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
     send_message(chat_id: @chat_id, text: 'Что вы хотите сделать?', reply_markup: markup)
+  end
+
+  def show_my_appointments
+    appointments = MongoClient.show_users_appointments(@chat_id)
+    if appointments != []
+      text = appointments.map do |s|
+        "#{s['russian_datetime']}"
+      end.join("\n")
+    else
+      text = 'У вас нет записей :('
+    end
+    @bot.api.send_message(chat_id: @chat_id, text: text)
   end
 end

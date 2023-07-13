@@ -122,6 +122,10 @@ class MongoClient
       MONGO['slots'].delete_one(russian_datetime: dt)
     end
 
+    def remove_slot(dt)
+      MONGO['slots'].delete_one(russian_datetime: dt)
+    end
+
     def switch(timestamp = nil)
       state = get_switch
       if timestamp
@@ -142,6 +146,16 @@ class MongoClient
 
     def get_switch
       (MONGO['switch'].find.to_a.first || Hash.new(false))['state']
+    end
+
+    def show_users_appointments(user_id)
+      MONGO['slots'].find(
+        {
+          'id' => user_id,
+          'state' => 'reserved',
+          'unix_timestamp' => { '$gt' => Time.now.utc.to_i }
+        }
+      ).to_a
     end
   end
 end

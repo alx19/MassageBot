@@ -4,7 +4,7 @@ class Master
   include Slot
 
   OPTIONS = %w[
-    Добавить\ слот Показать\ записи Показать\ расписание
+    Добавить\ слот Показать\ расписание\ и\ записи
     Записать\ человечка Разослать\ расписание Изменить\ слот
     Удалить\ слот Удалить\ запись
   ].freeze
@@ -53,24 +53,17 @@ class Master
       choose_minute
     elsif @text.match?(/^\d{2}\.\d{2}\.#{year} \d{1,2}:\d{1,2}$/)
       add_slot
-    elsif @text == 'Показать расписание'
+    elsif @text == 'Показать расписание и записи'
       active_slots = MongoClient.active_slots
       if active_slots.any?
-        active_slots = active_slots.map { |s| s['russian_datetime'] }.join("\n")
-        @bot.api.send_message(chat_id: MASTER_ID, text: active_slots)
+        active_slots = active_slots.map do |s|
+          [s['russian_datetime'], s['link']].join(' ')
+        end.join("\n")
+        @bot.api.send_message(chat_id: MASTER_ID, text: active_slots, parse_mode: 'HTML')
       else
         @bot.api.send_message(chat_id: MASTER_ID, text: 'Пока нет записей')
       end
       show_options
-    elsif @text == 'Показать записи'
-      if (schedule = MongoClient.schedule) != []
-        text = schedule.map do |s|
-          "#{s['russian_datetime']} #{s['link']}"
-        end.join("\n")
-      else
-        text = 'Никто не записан :('
-      end
-      @bot.api.send_message(chat_id: MASTER_ID, text: text, parse_mode: 'HTML')
     elsif @text == 'Добавить слот'
       choose_month
     elsif @text == 'Удалить слот'

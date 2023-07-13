@@ -25,3 +25,4 @@ I18n.locale = :ru
 I18n.reload!
 
 MASTER_ID = 149673513
+CALENDAR_ID = ''

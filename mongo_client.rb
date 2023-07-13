@@ -20,15 +20,6 @@ class MongoClient
       )
     end
 
-    def schedule
-      MONGO['slots'].find(
-        {
-          'state' => 'reserved',
-          'unix_timestamp' => { '$gt' => Time.now.utc.to_i }
-        }
-      ).to_a
-    end
-
     def add_calendar_event_id(find, event_id)
       MONGO['slots'].update_one(
         find,
@@ -78,8 +69,23 @@ class MongoClient
     def active_slots
       MONGO['slots'].find(
         {
-          state: 'active',
+          state: { '$in' => ['active', 'reserved'] },
           unix_timestamp: { '$gt' => Time.now.utc.to_i }
+        },
+        {
+          sort: { unix_timestamp: 1 }
+        }
+      ).to_a
+    end
+
+    def schedule
+      MONGO['slots'].find(
+        {
+          'state' => 'reserved',
+          'unix_timestamp' => { '$gt' => Time.now.utc.to_i }
+        },
+        {
+          sort: { unix_timestamp: 1 }
         }
       ).to_a
     end
@@ -154,6 +160,9 @@ class MongoClient
           'id' => user_id,
           'state' => 'reserved',
           'unix_timestamp' => { '$gt' => Time.now.utc.to_i }
+        },
+        {
+          sort: { unix_timestamp: 1 }
         }
       ).to_a
     end

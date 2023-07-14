@@ -13,9 +13,15 @@ module Slot
   end
 
   def remove_slot
-    kb = MongoClient.active_slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Удалить #{s['russian_datetime']}")] }
-    markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
-    @bot.api.send_message(chat_id: MASTER_ID, text: 'Какой слот хотите удалить?', reply_markup: markup)
+    if (slots = MongoClient.active_slots) != []
+      kb = MongoClient.active_slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Удалить #{s['russian_datetime']}")] }
+      markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
+      data = { chat_id: MASTER_ID, text: 'Какой слот хотите удалить?', reply_markup: markup }
+    else
+      data = { chat_id: MASTER_ID, text: 'Нет слотов для удаления' }
+    end
+    @bot.api.send_message(**data)
+    show_options if slots.empty?
   end
 
   def add_apointment

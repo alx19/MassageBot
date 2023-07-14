@@ -19,7 +19,7 @@ class Master
     when Telegram::Bot::Types::CallbackQuery
       perform_callback
     when Telegram::Bot::Types::Message
-      @text = @message.text
+      @text = @message.text.to_s
       perform_message
     end
   end

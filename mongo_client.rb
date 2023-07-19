@@ -4,10 +4,10 @@ MONGO = Mongo::Client.new('')
 
 class MongoClient
   class << self
-    def reserve_via_date_time(date:, time:, link: '', id: '')
+    def reserve_via_date_time(date:, time:, link: '', username: nil , id: '')
       MONGO['slots'].update_one(
         { date: date, time: time },
-        { '$set' => { state: 'reserved', link: link, id: id } }
+        { '$set' => { state: 'reserved', link: link, id: id, username: username } }
       )
       MONGO['slots'].find(date: date, time: time).to_a.first['unix_timestamp']
     end
@@ -20,10 +20,10 @@ class MongoClient
       )
     end
 
-    def add_calendar_event_id(find, event_id)
+    def add_calendar_event_id(find, event_id, text)
       MONGO['slots'].update_one(
         find,
-        { '$set' => { event_id: event_id } }
+        { '$set' => { event_id: event_id, text: text } }
       )
     end
 

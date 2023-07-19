@@ -57,7 +57,8 @@ class Master
       active_slots = MongoClient.active_slots
       if active_slots.any?
         active_slots = active_slots.map do |s|
-          [s['russian_datetime'], s['link']].join(' ')
+          username = s['username'] ? "@#{s['username']}" : nil
+          [s['russian_datetime'], s['link'], username, s['text']].compact.join(' ')
         end.join("\n")
         @bot.api.send_message(chat_id: MASTER_ID, text: active_slots, parse_mode: 'HTML')
       else
@@ -93,7 +94,7 @@ class Master
       date, time = MongoClient.switch.split
       unix_timestamp = MongoClient.reserve_via_date_time(date: date, time: time)
       result = GoogleCalendar.add_event_to_calendar(unix_timestamp, 'Массаж', @text)
-      MongoClient.add_calendar_event_id({ unix_timestamp: unix_timestamp }, result.id)
+      MongoClient.add_calendar_event_id({ unix_timestamp: unix_timestamp }, result.id, @text)
       @bot.api.send_message(chat_id: MASTER_ID, text: 'Запись создана')
       show_options
     else

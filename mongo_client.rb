@@ -20,7 +20,7 @@ class MongoClient
       )
     end
 
-    def add_calendar_event_id(find, event_id, text)
+    def add_calendar_event_id(find, event_id, text: nil)
       MONGO['slots'].update_one(
         find,
         { '$set' => { event_id: event_id, text: text } }

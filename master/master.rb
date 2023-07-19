@@ -94,7 +94,7 @@ class Master
       date, time = MongoClient.switch.split
       unix_timestamp = MongoClient.reserve_via_date_time(date: date, time: time)
       result = GoogleCalendar.add_event_to_calendar(unix_timestamp, 'Массаж', @text)
-      MongoClient.add_calendar_event_id({ unix_timestamp: unix_timestamp }, result.id, @text)
+      MongoClient.add_calendar_event_id({ unix_timestamp: unix_timestamp }, result.id, text: @text)
       @bot.api.send_message(chat_id: MASTER_ID, text: 'Запись создана')
       show_options
     else

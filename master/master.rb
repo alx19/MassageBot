@@ -54,13 +54,13 @@ class Master
     elsif @text.match?(/^\d{2}\.\d{2}\.#{year} \d{1,2}:\d{1,2}$/)
       add_slot
     elsif @text == 'Показать расписание и записи'
-      active_slots = MongoClient.active_slots
-      if active_slots.any?
-        active_slots = active_slots.map do |s|
+      active_and_reserved_slots = MongoClient.active_and_reserved_slots
+      if active_and_reserved_slots.any?
+        active_and_reserved_slots = active_and_reserved_slots.map do |s|
           username = s['username'] ? "@#{s['username']}" : nil
           [s['russian_datetime'], s['link'], username, s['text']].compact.join(' ')
         end.join("\n")
-        @bot.api.send_message(chat_id: MASTER_ID, text: active_slots, parse_mode: 'HTML')
+        @bot.api.send_message(chat_id: MASTER_ID, text: active_and_reserved_slots, parse_mode: 'HTML')
       else
         @bot.api.send_message(chat_id: MASTER_ID, text: 'Пока нет записей')
       end

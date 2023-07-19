@@ -69,6 +69,18 @@ class MongoClient
     def active_slots
       MONGO['slots'].find(
         {
+          state: 'active',
+          unix_timestamp: { '$gt' => Time.now.utc.to_i }
+        },
+        {
+          sort: { unix_timestamp: 1 }
+        }
+      ).to_a
+    end
+
+    def active_and_reserved_slots
+      MONGO['slots'].find(
+        {
           state: { '$in' => ['active', 'reserved'] },
           unix_timestamp: { '$gt' => Time.now.utc.to_i }
         },

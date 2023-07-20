@@ -57,7 +57,7 @@ module Slot
           callback_data: "Удалить;#{slot['russian_datetime']}"
         )
       end
-      markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: kb.each_slice(2).to_a)
+      markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: kb.each_slice(1).to_a)
       @bot.api.send_message(chat_id: MASTER_ID, text: 'Какую запись хотите удалить?', reply_markup: markup)
     else
       @bot.api.send_message(chat_id: MASTER_ID, text: 'Нет записей для удаления')

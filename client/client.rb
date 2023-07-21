@@ -23,6 +23,8 @@ class Client
     when /Записаться на /
       russian_date = @message.text.sub('Записаться на ', '')
       slot = MongoClient.find_slot_by_russian_date(russian_date)
+      return no_slot unless slot
+
       if slot['state'] == 'reserved'
         send_message(chat_id: @chat_id, text: 'Извините, данный слот уже занят :(')
       else
@@ -78,6 +80,11 @@ class Client
   end
 
   private
+
+  def no_slot
+    send_message(chat_id: @chat_id, text: 'Данный слот был удален, извините')
+    show_options
+  end
 
   def send_message(**data)
     begin

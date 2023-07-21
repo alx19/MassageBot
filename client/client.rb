@@ -34,7 +34,7 @@ class Client
         )
         result = GoogleCalendar.add_event_to_calendar(unix_timestamp, "Массаж #{user['name']}", "t.me/#{user['username']}")
         MongoClient.add_calendar_event_id({ unix_timestamp: unix_timestamp }, result.id)
-        send_message(chat_id: @chat_id, text: 'Спасибо за запись! За день до массажа мы на помним вам о нем. Ждем вас на массаж :)')
+        send_message(chat_id: @chat_id, text: 'Спасибо за запись, @alicekoala будет ждать вас на массаж. За день до массажа напомню вам о нем')
         send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a> записался на массаж #{russian_date}", parse_mode: 'HTML')
       end
       show_options

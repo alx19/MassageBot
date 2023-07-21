@@ -30,7 +30,9 @@ class Master
       mongo_slot = MongoClient.find_slot({russian_datetime: slot})
       GoogleCalendar.delete_event(mongo_slot['event_id'])
       MongoClient.reset_slot(slot)
-      @bot.api.send_message(chat_id: mongo_slot['id'], text: "Отменили вашу запись #{slot}, но будем ждать в следующий раз")
+      if mongo_slot['id']
+        @bot.api.send_message(chat_id: mongo_slot['id'], text: "Отменили вашу запись #{slot}, но будем ждать в следующий раз")
+      end
       @bot.api.send_message(chat_id: MASTER_ID, text: "Запись #{slot} удалена")
     else
       slot, time = @message.data.split(';')

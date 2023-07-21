@@ -17,7 +17,7 @@ class Client
   end
 
   def perform
-    return if @message != Telegram::Bot::Types::Message
+    return unless @message.is_a? Telegram::Bot::Types::Message
 
     case @message.text
     when /Записаться на /

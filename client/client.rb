@@ -17,6 +17,8 @@ class Client
   end
 
   def perform
+    return if @message != Telegram::Bot::Types::Message
+
     case @message.text
     when /Записаться на /
       russian_date = @message.text.sub('Записаться на ', '')

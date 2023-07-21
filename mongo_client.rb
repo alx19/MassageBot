@@ -62,8 +62,8 @@ class MongoClient
       )
     end
 
-    def get_event_id(find)
-      MONGO['slots'].find(find).to_a.first['event_id']
+    def find_slot(find)
+      MONGO['slots'].find(find).to_a.first
     end
 
     def active_slots

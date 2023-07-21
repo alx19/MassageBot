@@ -27,9 +27,10 @@ class Master
   def perform_callback
     if @message.data.start_with?('Удалить')
       _command, slot = @message.data.split(';')
-      event_id = MongoClient.get_event_id({russian_datetime: slot})
-      GoogleCalendar.delete_event(event_id)
+      mongo_slot = MongoClient.find_slot({russian_datetime: slot})
+      GoogleCalendar.delete_event(mongo_slot['event_id'])
       MongoClient.reset_slot(slot)
+      @bot.api.send_message(chat_id: mongo_slot['id'], text: "Отменили вашу запись #{slot}, но будем ждать в следующий раз")
       @bot.api.send_message(chat_id: MASTER_ID, text: "Запись #{slot} удалена")
     else
       slot, time = @message.data.split(';')

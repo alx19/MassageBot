@@ -4,8 +4,8 @@ class Client
   include Registration
 
   OPTIONS = %w[
-    Посмотреть\ расписание\ и\ записаться
-    Мои\ записи Схема\ проезда
+    Расписание\ и\ запись
+    Мои\ записи Время Стоимость Схема\ проезда
     Отменить\ запись Противопоказания
   ]
 
@@ -42,15 +42,15 @@ class Client
         send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a> записался на массаж #{russian_date}", parse_mode: 'HTML')
       end
       show_options
-    when 'Посмотреть расписание и записаться'
+    when 'Расписание и запись'
       slots = MongoClient.active_slots
       if slots != []
         kb = slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Записаться на #{s['russian_datetime']}")] }
         kb << [Telegram::Bot::Types::KeyboardButton.new(text: 'Назад')]
         markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
-        send_message(chat_id: @chat_id, text: 'Выберите слот для записи. На слоты до 17-00 действует скидка в 10%', reply_markup: markup)
+        send_message(chat_id: @chat_id, text: 'Выберите слот для записи. На слоты до 16-00 действует скидка в 10%', reply_markup: markup)
       else
-        send_message(chat_id: @chat_id, text: 'Свободных слотов нет :(')
+        send_message_and_options('Свободных слотов нет :(')
       end
     when 'Схема проезда'
       send_path
@@ -63,9 +63,12 @@ class Client
       show_options
     when 'Назад'
       show_options
+    when 'Время'
+      send_message_and_options(about_time)
+    when 'Стоимость'
+      send_message_and_options(about_cost)
     when 'Отменить запись'
-      send_message(chat_id: @chat_id, text: 'Для отмены записи напишите мастеру @alicekoala')
-      show_options
+      send_message_and_options('Для отмены записи напишите мастеру @alicekoala')
     when '/start'
       greetings
     else
@@ -81,6 +84,28 @@ class Client
 
   private
 
+  def about_cost
+    text = [
+      "3000р за час массажа, 90 минут и 120 минут стоят 4500 рублей и 6000 соответственно\n",
+      "В это время не включено прийти, раздеться, поговорить после и выпить чаю.",
+      "Стандартный сеанс, который включает в себя массаж всего человека, длится полтора часа, именно его я советую для первого раза.\n",
+      "Сейчас на дневные сеансы, которые начинаются до 16:00 действует скидка 10%, час будет стоить 2700р, полтора — 4000."
+    ].join("\n")
+  end
+
+  def about_time
+    text = [
+      "Можно прийти на 5-7 минут раньше, сильно заранее не нужно.\n",
+      "К времени самого массажа можно добавлять 30 минут, то есть если вы записались на часовой массаж, весь визит займет около полутора часов\n",
+      "Если вы опаздываете более, чем на 10 минут — сеанс будет короче, чтобы не пострадало расписание и другие клиенты"
+    ].join("\n")
+  end
+
+  def send_message_and_options(text)
+    send_message(chat_id: @chat_id, text: text)
+    show_options
+  end
+
   def no_slot
     send_message(chat_id: @chat_id, text: 'Данный слот был удален, извините')
     show_options
@@ -95,8 +120,8 @@ class Client
   end
 
   def show_options
-    kb = OPTIONS.map { |o| [Telegram::Bot::Types::KeyboardButton.new(text: o)] }
-    markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
+    kb = OPTIONS.map { |o| Telegram::Bot::Types::KeyboardButton.new(text: o) }
+    markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb.each_slice(2).to_a, one_time_keyboard: true)
     send_message(chat_id: @chat_id, text: 'Что вы хотите сделать?', reply_markup: markup)
   end
 

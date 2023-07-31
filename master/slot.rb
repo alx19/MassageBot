@@ -32,7 +32,7 @@ module Slot
 
   def ask_for_new_time(slot)
     hours = (8..21).map(&:to_s)
-    minutes = %w(00 30)
+    minutes = %w(00 15 30 45)
     kb = []
     hours.each do |hour|
       minutes.each do |minute|
@@ -108,7 +108,7 @@ module Slot
   end
 
   def choose_minute
-    kb = %w[00 30].map { |m| [Telegram::Bot::Types::KeyboardButton.new(text: "#{@text}:#{m}")] }
+    kb = %w[00 15 30 45].map { |m| [Telegram::Bot::Types::KeyboardButton.new(text: "#{@text}:#{m}")] }
     markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
     @bot.api.send_message(chat_id: MASTER_ID, text: 'Выберите минуты', reply_markup: markup)
   end

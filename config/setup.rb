@@ -1,7 +1,8 @@
 files = %w[
   ../google_calendar ../client/path ../client/contraindications ../client/registation
-  ../client/client ../russian_date ../mongo_client
+  ../client/client ../russian_date db_setup ../mongo_client
   ../master/slot ../master/master ../my_logger
+  ../handler/handler ../handler/message_handler
 ]
 files.each do |file|
   require_relative file
@@ -24,4 +25,9 @@ I18n.load_path << 'config/locales/datetime.ru.yml'
 I18n.locale = :ru
 I18n.reload!
 
-MASTER_ID = 149673513
+CONFIG = YAML.load_file('config/config.yml')
+
+if File.exist?('config/config.yml.local')
+  local_config = YAML.load_file('config/config.yml.local')
+  CONFIG.merge!(local_config)
+end

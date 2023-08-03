@@ -1,0 +1,2 @@
+2023-05-27 11:53:06 +0300: undefined local variable or method `config' for main:Object, message_text: 
+2023-05-27 11:53:33 +0300: undefined local variable or method `config' for main:Object, message_text: 

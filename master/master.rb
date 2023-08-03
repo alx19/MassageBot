@@ -27,7 +27,7 @@ class Master
   def perform_callback
     slot, time = @message.data.split(';')
     MongoClient.update_slot(slot, time)
-    @bot.api.send_message(chat_id: MASTER_ID, text: 'Слот изменен')
+    @bot.api.send_message(chat_id: CONFIG['master_id'], text: 'Слот изменен')
     show_options
   end
 
@@ -38,7 +38,7 @@ class Master
     elsif @text.start_with?('Записать на')
       date, time = @text.sub('Записать на ', '').split
       MongoClient.switch("#{date} #{time}")
-      @bot.api.send_message(chat_id: MASTER_ID, text: 'Напишите описание для записи')
+      @bot.api.send_message(chat_id: CONFIG['master_id'], text: 'Напишите описание для записи')
     elsif @text.match?(/\d{2}\.\d{2}\.#{year}$/)
       choose_hour
     elsif @text.match?(/\d{2}\.\d{2}\.#{year} \d{1,2}$/)
@@ -49,9 +49,9 @@ class Master
       active_slots = MongoClient.active_slots
       if active_slots.any?
         active_slots = active_slots.map { |s| s['russian_datetime'] }.join("\n")
-        @bot.api.send_message(chat_id: MASTER_ID, text: active_slots)
+        @bot.api.send_message(chat_id: CONFIG['master_id'], text: active_slots)
       else
-        @bot.api.send_message(chat_id: MASTER_ID, text: 'Пока нет записей')
+        @bot.api.send_message(chat_id: CONFIG['master_id'], text: 'Пока нет записей')
       end
       show_options
     elsif @text == 'Показать записи'
@@ -62,7 +62,7 @@ class Master
       else
         text = 'Никто не записан :('
       end
-      @bot.api.send_message(chat_id: MASTER_ID, text: text, parse_mode: 'HTML')
+      @bot.api.send_message(chat_id: CONFIG['master_id'], text: text, parse_mode: 'HTML')
     elsif @text == 'Добавить слот'
       choose_month
     elsif @text == 'Удалить слот'
@@ -73,11 +73,11 @@ class Master
       slot = @text.sub('Удалить ', '')
       begin
         MongoClient.remove_slot(slot)
-        @bot.api.send_message(chat_id: MASTER_ID, text: "Слот #{slot} удален.")
+        @bot.api.send_message(chat_id: CONFIG['master_id'], text: "Слот #{slot} удален.")
         show_options
       rescue => e
         puts e.message
-        @bot.api.send_message(chat_id: MASTER_ID, text: "Ошибка! Слот #{slot} не удален.")
+        @bot.api.send_message(chat_id: CONFIG['master_id'], text: "Ошибка! Слот #{slot} не удален.")
       end
     elsif @text == 'Записать человечка'
       add_apointment
@@ -90,7 +90,7 @@ class Master
       date, time = MongoClient.switch.split
       timestamp = MongoClient.reserve_via_date_time(date: date, time: time)
       GoogleCalendar.add_event_to_calendar(timestamp, 'Массаж', @text)
-      @bot.api.send_message(chat_id: MASTER_ID, text: 'Запись создана')
+      @bot.api.send_message(chat_id: CONFIG['master_id'], text: 'Запись создана')
     else
       show_options
     end
@@ -101,6 +101,6 @@ class Master
   def show_options
     kb = OPTIONS.map { |option| Telegram::Bot::Types::KeyboardButton.new(text: option) }
     markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb.each_slice(2).to_a, one_time_keyboard: true)
-    @bot.api.send_message(chat_id: MASTER_ID, text: 'Что будете делать?', reply_markup: markup)
+    @bot.api.send_message(chat_id: CONFIG['master_id'], text: 'Что будете делать?', reply_markup: markup)
   end
 end

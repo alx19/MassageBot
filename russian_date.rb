@@ -2,11 +2,9 @@ class RussianDate
   MONTHS = %w(Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь).freeze
 
   class << self
-    def days_of_month(month)
-      today = Date.today
-      m = MONTHS.index(month) + 1
-      y = today.year
-      (Date.new(y, m, today.day)..Date.new(y, m, -1)).map do |dt|
+    def days_of_month(month_name)
+      month = MONTHS.index(month_name) + 1
+      (Date.new(year, month, day)..Date.new(year, month, -1)).map do |dt|
         dt.strftime('%d.%m.%Y')
       end
     end
@@ -20,6 +18,20 @@ class RussianDate
       [current_month - 1, current_month % 12].map do |month_number|
         MONTHS[month_number]
       end
+    end
+
+    private
+
+    def today
+      @today ||= Date.today
+    end
+
+    def day
+      today.day
+    end
+
+    def year
+      today.year
     end
   end
 end

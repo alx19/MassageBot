@@ -32,7 +32,11 @@ class GoogleCalendar
 
       calendar = Google::Apis::CalendarV3::CalendarService.new
       googleauth(calendar)
-      calendar.delete_event(CALENDAR_ID, event_id)
+      begin
+        calendar.delete_event(CALENDAR_ID, event_id)
+      rescue => e
+        MyLogger.new('deleted_calendar.txt').log_error(e)
+      end
     end
 
     private

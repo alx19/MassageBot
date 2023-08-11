@@ -4,8 +4,8 @@ class Client
   include Registration
 
   OPTIONS = %w[
-    Расписание\ и\ запись
-    Мои\ записи Время Стоимость Схема\ проезда
+    Расписание\ и\ запись Мои\ записи
+    Стоимость\ и\ время Схема\ проезда
     Отменить\ запись Противопоказания
   ]
 
@@ -63,10 +63,8 @@ class Client
       show_options
     when 'Назад'
       show_options
-    when 'Время'
-      send_message_and_options(about_time)
-    when 'Стоимость'
-      send_message_and_options(about_cost)
+    when 'Стоимость и время'
+      send_message_and_options(about_cost_and_time)
     when 'Отменить запись'
       send_message_and_options('Для отмены записи напишите мастеру @alicekoala')
     when '/start'
@@ -83,6 +81,10 @@ class Client
   end
 
   private
+
+  def about_cost_and_time
+    ["<b>Стоимость</b>", about_cost, "", "<b>Время</b>", about_time].join("\n")
+  end
 
   def about_cost
     text = [
@@ -102,7 +104,7 @@ class Client
   end
 
   def send_message_and_options(text)
-    send_message(chat_id: @chat_id, text: text)
+    send_message(chat_id: @chat_id, text: text, parse_mode: 'HTML')
     show_options
   end
 

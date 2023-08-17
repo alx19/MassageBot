@@ -11,5 +11,5 @@ file.close
 MongoClient.show_users.each do |user|
   Telegram::Bot::Client.new(TOKEN).api.send_message(chat_id: user['id'], text: file_contents)
 rescue => e
-  MyLogger.new('log/failed_spam.txt').log_error(e)
+  MyLogger.new('failed_spam.txt').log_error(e)
 end

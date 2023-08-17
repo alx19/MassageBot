@@ -136,7 +136,7 @@ module Client
       begin
         @bot.api.send_message(**data)
       rescue => e
-        MyLogger.new('log/messages_log.txt').log_error(e)
+        MyLogger.new('messages_log.txt').log_error(e)
       end
     end
 

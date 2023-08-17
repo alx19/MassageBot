@@ -1,9 +1,10 @@
-require_relative 'mongo_client'
-require_relative 'my_logger'
-require 'telegram/bot'
-TOKEN = ''
+require_relative '../config/config'
+require_relative '../lib/mongo_client'
+require_relative '../lib/my_logger'
 
-file = File.open('announcement.txt', 'r')
+require 'telegram/bot'
+
+file = File.open(File.join(__dir__, '..', 'bin', 'announcement.txt'), 'r')
 file_contents = file.read
 file.close
 

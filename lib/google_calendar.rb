@@ -1,6 +1,8 @@
 class GoogleCalendar
   class << self
     def add_event_to_calendar(timestamp, event_name, note = '')
+      return if CALENDAR_ID.empty?
+
       # Setup the Calendar API
       calendar = Google::Apis::CalendarV3::CalendarService.new
       googleauth(calendar)
@@ -28,6 +30,7 @@ class GoogleCalendar
     end
 
     def delete_event(event_id)
+      return if CALENDAR_ID.empty?
       return unless event_id
 
       calendar = Google::Apis::CalendarV3::CalendarService.new
@@ -35,7 +38,7 @@ class GoogleCalendar
       begin
         calendar.delete_event(CALENDAR_ID, event_id)
       rescue => e
-        MyLogger.new('deleted_calendar.txt').log_error(e)
+        MyLogger.new('log/deleted_calendar.txt').log_error(e)
       end
     end
 

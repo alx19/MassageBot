@@ -19,3 +19,60 @@
 	1: from /Users/sukharev.an/.rbenv/versions/2.7.7/lib/ruby/gems/2.7.0/gems/telegram-bot-ruby-1.0.0/lib/telegram/bot/api.rb:46:in `method_missing'
 /Users/sukharev.an/.rbenv/versions/2.7.7/lib/ruby/gems/2.7.0/gems/telegram-bot-ruby-1.0.0/lib/telegram/bot/api.rb:61:in `call': [1mTelegram API has returned the error. (ok: "false", error_code: "403", description: "Forbidden: bot was blocked by the user") ([1;4mTelegram::Bot::Exceptions::ResponseError[m[1m)[m
 , message_text: 
+2023-08-17 15:31:55 +0300: undefined method `to_id' for 173948014:Integer
+Did you mean?  to_i
+               to_d
+               to_int
+               to_c
+               to_r
+               to_f
+               to_s [1mTraceback[m (most recent call last):
+	2: from services/spam.rb:11:in `<main>'
+	1: from services/spam.rb:11:in `each'
+services/spam.rb:12:in `block in <main>': [1mundefined method `to_id' for 173948014:Integer ([1;4mNoMethodError[m[1m)[m
+[1mDid you mean?  to_i[m
+[1m               to_d[m
+[1m               to_int[m
+[1m               to_c[m
+[1m               to_r[m
+[1m               to_f[m
+[1m               to_s[m
+, message_text: 
+2023-08-17 15:31:55 +0300: undefined method `to_id' for 5668045859:Integer
+Did you mean?  to_i
+               to_d
+               to_int
+               to_c
+               to_r
+               to_f
+               to_s [1mTraceback[m (most recent call last):
+	2: from services/spam.rb:11:in `<main>'
+	1: from services/spam.rb:11:in `each'
+services/spam.rb:12:in `block in <main>': [1mundefined method `to_id' for 5668045859:Integer ([1;4mNoMethodError[m[1m)[m
+[1mDid you mean?  to_i[m
+[1m               to_d[m
+[1m               to_int[m
+[1m               to_c[m
+[1m               to_r[m
+[1m               to_f[m
+[1m               to_s[m
+, message_text: 
+2023-08-17 15:31:55 +0300: undefined method `to_id' for 444897261:Integer
+Did you mean?  to_i
+               to_d
+               to_int
+               to_c
+               to_r
+               to_f
+               to_s [1mTraceback[m (most recent call last):
+	2: from services/spam.rb:11:in `<main>'
+	1: from services/spam.rb:11:in `each'
+services/spam.rb:12:in `block in <main>': [1mundefined method `to_id' for 444897261:Integer ([1;4mNoMethodError[m[1m)[m
+[1mDid you mean?  to_i[m
+[1m               to_d[m
+[1m               to_int[m
+[1m               to_c[m
+[1m               to_r[m
+[1m               to_f[m
+[1m               to_s[m
+, message_text: 

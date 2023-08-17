@@ -1,5 +1,5 @@
 class MyLogger
-  def initialize(file = 'log.txt')
+  def initialize(file = 'log/log.txt')
     @file = file
   end
 

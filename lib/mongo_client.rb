@@ -1,6 +1,6 @@
 require 'mongo'
 
-MONGO = Mongo::Client.new('')
+MONGO = Mongo::Client.new(MONGO_URL)
 
 class MongoClient
   class << self

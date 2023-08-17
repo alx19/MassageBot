@@ -1,3 +1,5 @@
+files = YAML.load_file(File.join(__dir__, '..', 'config', 'courses.yml'))
+
 COURSES = [
   Course.new(
     title: 'Урок по партнерскому массажу плеч и шеи',
@@ -9,26 +11,18 @@ COURSES = [
     ].join("\n"),
     files: [
       {
-        file_id: 'BQACAgIAAxkDAAIJ1WTbmTuFQIvJXEsHzvfIh4jGgGxkAAJUNwAC3L3YSmtIyX753kkIMAQ',
+        file_id: files['Плечи и шея']['Памятка'],
         caption: 'Памятка массажиста с информацией по технике безопасности.'
       },
       {
-        file_id: 'BQACAgIAAxkDAAIJ4WTd4a_F3TLjQQjkL2ERmwK531aCAAKWLQACysvwSnVDujCMsS8EMAQ',
+        file_id: files['Плечи и шея']['Картина боли'],
         caption: 'Материалы для определения клинической картины боли с комментариями алголога-невролога.'
       },
       {
-        file_id: 'BQACAgIAAxkDAAIJ4GTd4a2sYZJFftJoh4ikkgOq7VbNAAKVLQACysvwSrYvslB6bqBkMAQ',
+        file_id: files['Плечи и шея']['Теория'],
         caption: 'Теория —- что такое доказательный массаж, когда массаж работает, а когда нет, важная информация про барьеры нашего тела и необходимая теория о строении тела.'
       }
     ],
-    price: 1_000 # поменять цену поменять цену
-  ),
-  Course.new(
-    title: 'Урок тест',
-    description: "Тут вообще ничего нет, но и цена соответствующая",
-    content: [
-      "Спасибо, что подарили мне 200р!"
-    ].join("\n"),
-    price: 200
+    price: 3_000
   )
 ]

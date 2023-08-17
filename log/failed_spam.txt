@@ -1,0 +1,21 @@
+2023-08-11 19:35:48 +0300: Telegram API has returned the error. (ok: "false", error_code: "403", description: "Forbidden: bot was blocked by the user") [1mTraceback[m (most recent call last):
+	4: from spam.rb:10:in `<main>'
+	3: from spam.rb:10:in `each'
+	2: from spam.rb:11:in `block in <main>'
+	1: from /Users/sukharev.an/.rbenv/versions/2.7.7/lib/ruby/gems/2.7.0/gems/telegram-bot-ruby-1.0.0/lib/telegram/bot/api.rb:46:in `method_missing'
+/Users/sukharev.an/.rbenv/versions/2.7.7/lib/ruby/gems/2.7.0/gems/telegram-bot-ruby-1.0.0/lib/telegram/bot/api.rb:61:in `call': [1mTelegram API has returned the error. (ok: "false", error_code: "403", description: "Forbidden: bot was blocked by the user") ([1;4mTelegram::Bot::Exceptions::ResponseError[m[1m)[m
+, message_text: 
+2023-08-11 19:36:22 +0300: Telegram API has returned the error. (ok: "false", error_code: "403", description: "Forbidden: bot was blocked by the user") [1mTraceback[m (most recent call last):
+	4: from spam.rb:10:in `<main>'
+	3: from spam.rb:10:in `each'
+	2: from spam.rb:11:in `block in <main>'
+	1: from /Users/sukharev.an/.rbenv/versions/2.7.7/lib/ruby/gems/2.7.0/gems/telegram-bot-ruby-1.0.0/lib/telegram/bot/api.rb:46:in `method_missing'
+/Users/sukharev.an/.rbenv/versions/2.7.7/lib/ruby/gems/2.7.0/gems/telegram-bot-ruby-1.0.0/lib/telegram/bot/api.rb:61:in `call': [1mTelegram API has returned the error. (ok: "false", error_code: "403", description: "Forbidden: bot was blocked by the user") ([1;4mTelegram::Bot::Exceptions::ResponseError[m[1m)[m
+, message_text: 
+2023-08-11 19:36:22 +0300: Telegram API has returned the error. (ok: "false", error_code: "403", description: "Forbidden: bot was blocked by the user") [1mTraceback[m (most recent call last):
+	4: from spam.rb:10:in `<main>'
+	3: from spam.rb:10:in `each'
+	2: from spam.rb:11:in `block in <main>'
+	1: from /Users/sukharev.an/.rbenv/versions/2.7.7/lib/ruby/gems/2.7.0/gems/telegram-bot-ruby-1.0.0/lib/telegram/bot/api.rb:46:in `method_missing'
+/Users/sukharev.an/.rbenv/versions/2.7.7/lib/ruby/gems/2.7.0/gems/telegram-bot-ruby-1.0.0/lib/telegram/bot/api.rb:61:in `call': [1mTelegram API has returned the error. (ok: "false", error_code: "403", description: "Forbidden: bot was blocked by the user") ([1;4mTelegram::Bot::Exceptions::ResponseError[m[1m)[m
+, message_text: 

@@ -7,7 +7,6 @@ class MessageHandler
   end
 
   def perform
-    puts message.to_h
     return handle_payment if is_payment?
     return handle_master if message_from_master?
 

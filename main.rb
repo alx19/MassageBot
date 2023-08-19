@@ -6,5 +6,5 @@ Telegram::Bot::Client.run(TOKEN) do |bot|
   end
 rescue => e
   MyLogger.new.log(e)
-  Telegram::Bot::Client.new(TOKEN).api.send_message(chat_id: ALEX_SPOON, text: "Бот Алисы упал!")
+  Telegram::Bot::Client.new(SPOON_TOKEN).api.send_message(chat_id: ALEX_SPOON, text: "Бот Алисы упал!")
 end

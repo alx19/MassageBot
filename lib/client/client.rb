@@ -48,15 +48,7 @@ module Client
         end
         show_options
       when 'Расписание и запись'
-        slots = MongoClient.active_slots
-        if slots != []
-          kb = slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Записаться на #{s['russian_datetime']}")] }
-          kb << [Telegram::Bot::Types::KeyboardButton.new(text: 'Назад')]
-          markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
-          send_message(chat_id: @chat_id, text: 'Выберите слот для записи. На слоты до 16-00 действует скидка в 10%', reply_markup: markup)
-        else
-          send_message_and_options('Свободных слотов нет :(')
-        end
+        send_schedule
       when 'Схема проезда'
         send_path
         show_options
@@ -173,6 +165,25 @@ module Client
     def send_course_and_invoice
       course_id = @message.data.match(/\d+/)[0].to_i
       ::Client::Payments::Course.new(bot: @bot, chat_id: @chat_id, course_id: course_id).sell_course
+    end
+
+    def send_schedule
+      return send_vacation if ENV['VACATION_DATE']
+
+      slots = MongoClient.active_slots
+      if slots != []
+        kb = slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Записаться на #{s['russian_datetime']}")] }
+        kb << [Telegram::Bot::Types::KeyboardButton.new(text: 'Назад')]
+        markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
+        send_message(chat_id: @chat_id, text: 'Выберите слот для записи. На слоты до 16-00 действует скидка в 10%', reply_markup: markup)
+      else
+        send_message_and_options('Свободных слотов нет :(')
+      end
+    end
+
+    def send_vacation
+      text = "До #{ENV['VACATION_DATE']} записаться нельзя, @alicekoala в отпуске. Пока можно купить уроки по массажу дома. Как только появятся новые слоты — вы узнаете о них из рассылки."
+      send_message_and_options(text)
     end
   end
 end

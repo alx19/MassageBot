@@ -1,5 +1,5 @@
 class MessageHandler
-  attr_reader :message, :bot
+  attr_reader :message, :bot, :course
 
   def initialize(message:, bot:)
     @message = message
@@ -56,7 +56,7 @@ class MessageHandler
 
   def deliver_course(product)
     course_id = product.delete_prefix("course_").to_i
-    course = COURSES[course_id]
+    @course = COURSES[course_id]
     bot.api.send_message(chat_id: message.from.id, text: course.content)
     course.files.each do |file|
       bot.api.send_document(chat_id: message.from.id, document: file.file_id, caption: file.caption)
@@ -70,7 +70,7 @@ class MessageHandler
   def notify_master
     user = message.from
     amount = message.successful_payment.total_amount / 100
-    username = user.username ? "@#{user.username}" : ''
-    bot.api.send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user.id}\">#{user.first_name}</a> #{username}купил курс за #{amount}р 🤑", parse_mode: 'HTML')
+    username = user.username ? "@#{user.username} " : ''
+    bot.api.send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user.id}\">#{user.first_name}</a> #{username}купил курс #{course.title} за #{amount}р 🤑", parse_mode: 'HTML')
   end
 end

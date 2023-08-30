@@ -175,7 +175,7 @@ module Client
         kb = slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Записаться на #{s['russian_datetime']}")] }
         kb << [Telegram::Bot::Types::KeyboardButton.new(text: 'Назад')]
         markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
-        send_message(chat_id: @chat_id, text: 'Выберите слот для записи. На слоты до 16-00 действует скидка в 10%', reply_markup: markup)
+        send_message(chat_id: @chat_id, text: 'Выберите слот для записи:', reply_markup: markup)
       else
         send_message_and_options('Свободных слотов нет :(')
       end

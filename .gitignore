@@ -1,2 +1,3 @@
-log/*.txt
-.env
+log/*.log
+.DS_Store
+/services/*.pdf

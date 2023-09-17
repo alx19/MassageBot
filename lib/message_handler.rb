@@ -11,6 +11,9 @@ class MessageHandler
     return handle_master if message_from_master?
 
     handle_client
+  rescue => e
+    LOGGER.fatal('Caught exception;')
+    LOGGER.fatal(e)
   end
 
   private

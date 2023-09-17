@@ -37,8 +37,6 @@ class GoogleCalendar
       googleauth(calendar)
       begin
         calendar.delete_event(CALENDAR_ID, event_id)
-      rescue => e
-        MyLogger.new('deleted_calendar.txt').log_error(e)
       end
     end
 

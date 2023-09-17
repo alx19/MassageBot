@@ -126,11 +126,12 @@ module Client
     end
 
     def send_message(**data)
-      begin
-        @bot.api.send_message(**data)
-      rescue => e
-        MyLogger.new('messages_log.txt').log_error(e)
-      end
+      @bot.api.send_message(**data)
+    rescue Telegram::Bot::Exceptions::ResponseError => e
+      return if e.error_code == '403'
+
+      LOGGER.fatal('Caught exception;')
+      LOGGER.fatal(e)
     end
 
     def show_options

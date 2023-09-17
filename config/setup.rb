@@ -19,10 +19,11 @@ I18n.load_path << 'config/locales/datetime.ru.yml'
 I18n.locale = :ru
 I18n.reload!
 
-LOGGER = Logger.new(ERRORS_LOG_PATH)
-
 # Важно сначала инициализировать константы
 require_relative 'config'
+
+LOGGER = Logger.new(ERRORS_LOG_PATH)
+$stderr = File.open(MAIN_LOG_PATH, 'w')
 
 Dir[File.join(File.dirname(__FILE__), '../lib/', '**/*.rb')].each do |f|
   next if f.end_with?('master.rb') || f.end_with?('/client.rb')

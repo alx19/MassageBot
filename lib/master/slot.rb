@@ -80,10 +80,10 @@ module Slot
     MongoClient.show_users.each do |user|
       next if user['id'] == MASTER_ID
 
-      @bot.api.send_message(chat_id: user['id'], text: text.join("\n"))
+      send_schedule(chat_id: user['id'], text: text.join("\n"))
     end
     MongoClient.set_pushed
-    @bot.api.send_message(chat_id: MASTER_ID, text: 'Расписание разослано!', reply_markup: markup)
+    @bot.api.send_message(chat_id: MASTER_ID, text: 'Расписание разослано!')
     show_options
   end
 
@@ -111,5 +111,14 @@ module Slot
     kb = %w[00 15 30 45].map { |m| [Telegram::Bot::Types::KeyboardButton.new(text: "#{@text}:#{m}")] }
     markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
     @bot.api.send_message(chat_id: MASTER_ID, text: 'Выберите минуты', reply_markup: markup)
+  end
+
+  def send_schedule(**data)
+    @bot.api.send_message(**data)
+  rescue Telegram::Bot::Exceptions::ResponseError => e
+    return if e.error_code == '403'
+
+    LOGGER.fatal('Caught exception;')
+    LOGGER.fatal(e)
   end
 end

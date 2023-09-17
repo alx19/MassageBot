@@ -23,7 +23,6 @@ I18n.reload!
 require_relative 'config'
 
 LOGGER = Logger.new(ERRORS_LOG_PATH)
-$stderr = File.open(MAIN_LOG_PATH, 'w')
 
 Dir[File.join(File.dirname(__FILE__), '../lib/', '**/*.rb')].each do |f|
   next if f.end_with?('master.rb') || f.end_with?('/client.rb')

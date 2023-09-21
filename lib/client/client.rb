@@ -4,12 +4,14 @@ module Client
     include Contraindications
     include Registration
     #include Payment::Course
+    include Faq
 
     OPTIONS = %w[
       Расписание\ и\ запись Мои\ записи
       Стоимость\ и\ время Схема\ проезда
       Отменить\ запись Подарочный\ сертификат
       Противопоказания Курсы\ массажа
+      Вопросы\ о\ массаже
     ]
 
     def initialize(bot:, message:)
@@ -31,6 +33,8 @@ module Client
 
         if slot['state'] == 'reserved'
           send_message(chat_id: @chat_id, text: 'Извините, данный слот уже занят :(')
+        elsif Time.now.utc.to_i > slot['unix_timestamp']#.to_i
+          send_message(chat_id: @chat_id, text: 'Извините, время записи на этот слот уже вышло')
         else
           user = MongoClient.user_info(@chat_id)
           unix_timestamp = MongoClient.reserve_via_date_time(
@@ -41,7 +45,7 @@ module Client
             id: @chat_id
           )
           result = GoogleCalendar.add_event_to_calendar(unix_timestamp, "Массаж #{user['name']}", "t.me/#{user['username']}")
-          username = user['username'].empty? ? '' : "@#{user['username']} "
+          username = @message.from.username ? '' : "@#{@message.from.username} "
           MongoClient.add_calendar_event_id({ unix_timestamp: unix_timestamp }, result.id) if result
           send_message(chat_id: @chat_id, text: 'Спасибо за запись, @alicekoala будет ждать вас на массаж. За день до массажа напомню вам о нем')
           send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a> #{username}записался на массаж #{russian_date}", parse_mode: 'HTML')
@@ -68,6 +72,8 @@ module Client
         send_message_and_options(about_sertificate)
       when 'Курсы массажа'
         send_courses
+      when 'Вопросы о массаже'
+        send_faq
       when '/start'
         greetings
       else

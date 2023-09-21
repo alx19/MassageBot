@@ -22,6 +22,8 @@ I18n.reload!
 # Важно сначала инициализировать константы
 require_relative 'config'
 
+file = File.open(MAIN_LOG_PATH, 'a')
+MAIN_LOGGER = Logger.new(file)
 LOGGER = Logger.new(ERRORS_LOG_PATH)
 
 Dir[File.join(File.dirname(__FILE__), '../lib/', '**/*.rb')].each do |f|

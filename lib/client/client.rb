@@ -74,8 +74,9 @@ module Client
         send_courses
       when 'Вопросы о массаже'
         send_faq
+        show_options
       when '/start'
-        greetings
+        not_registred? ? greetings : show_options
       else
         if not_registred?
           MongoClient.add_user(id: @chat_id, name: @message.text.strip, username: @message.from.username)

@@ -72,6 +72,8 @@ module Client
         send_message_and_options(about_sertificate)
       when 'Курсы массажа'
         send_courses
+      when 'тест курс 123'
+        ::Client::Payments::Course.test_course(@bot, @chat_id)
       when 'Вопросы о массаже'
         send_faq
         show_options

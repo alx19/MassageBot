@@ -13,6 +13,10 @@ module Client
         send_invoice(generate_invoice)
       end
 
+      def self.test_course(bot, chat_id)
+        send_invoice(bot, test_invoice(chat_id))
+      end
+
       private
 
       def generate_invoice
@@ -24,6 +28,21 @@ module Client
           prices: telegram_labeled_price('Курс', @course.price),
           currency: CURRENCY
         }
+      end
+
+      def self.test_invoice(chat_id)
+        {
+          chat_id: chat_id,
+          title: "тестовый курс тайтл",
+          description: "тестовый курс описание",
+          payload: "test",
+          prices: telegram_labeled_price('Курс', 200),
+          currency: CURRENCY
+        }
+      end
+
+      def self.telegram_labeled_price(label, price)
+        [Telegram::Bot::Types::LabeledPrice.new(label: label, amount: price * 100)]
       end
 
       def telegram_labeled_price(label, price)

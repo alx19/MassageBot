@@ -54,6 +54,8 @@ class MessageHandler
     case
     when product.start_with?("course")
       deliver_course(product)
+    when product.start_with?("test")
+      bot.api.send_document(chat_id: message.from.id, text: 'поздравляю, вы купили ничего за 200р!')
     end
   end
 

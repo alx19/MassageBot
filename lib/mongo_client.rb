@@ -178,5 +178,13 @@ class MongoClient
         }
       ).to_a
     end
+
+    def count_slots_by_id(id)
+      MONGO['slots'].count_documents(
+        {
+          'id' => id
+        }
+      )
+    end
   end
 end

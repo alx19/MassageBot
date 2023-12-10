@@ -33,7 +33,7 @@ module Client
 
         if slot['state'] == 'reserved'
           send_message(chat_id: @chat_id, text: 'Извините, данный слот уже занят :(')
-        elsif Time.now.utc.to_i > slot['unix_timestamp']#.to_i
+        elsif Time.now.utc.to_i > slot['unix_timestamp']
           send_message(chat_id: @chat_id, text: 'Извините, время записи на этот слот уже вышло')
         else
           user = MongoClient.user_info(@chat_id)
@@ -51,28 +51,28 @@ module Client
           send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a> #{username}записался на массаж #{russian_date}", parse_mode: 'HTML')
         end
         show_options
-      when 'Расписание и запись'
+      when 'Расписание и запись', '/schedule'
         send_schedule
-      when 'Схема проезда'
+      when 'Схема проезда', '/location'
         send_path
         show_options
-      when 'Противопоказания'
+      when 'Противопоказания', '/contraindications'
         send_contraindications
         show_options
-      when 'Мои записи'
+      when 'Мои записи', '/appointments'
         show_my_appointments
         show_options
       when 'Назад'
         show_options
-      when 'Стоимость и время'
+      when 'Стоимость и время', '/costtime'
         send_message_and_options(about_cost_and_time)
-      when 'Отменить запись'
+      when 'Отменить запись', '/cancel'
         send_message_and_options('Для отмены записи напишите мастеру @alicekoala')
-      when 'Подарочный сертификат'
+      when 'Подарочный сертификат', '/certificate'
         send_message_and_options(about_sertificate)
-      when 'Курсы массажа'
+      when 'Курсы массажа', '/courses'
         send_courses
-      when 'Вопросы о массаже'
+      when 'Вопросы о массаже', '/faq'
         send_faq
         show_options
       when '/start'

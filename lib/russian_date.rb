@@ -5,7 +5,7 @@ class RussianDate
     def days_of_month(month)
       today = Date.today
       m = MONTHS.index(month) + 1
-      y = today.year
+      y = month == 'Январь' && today.month == 12 ? today.year + 1 : today.year
       start = m == today.month ? today.day : 1
       (Date.new(y, m, start)..Date.new(y, m, -1)).map do |dt|
         dt.strftime('%d.%m.%Y')

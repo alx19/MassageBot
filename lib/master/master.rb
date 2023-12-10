@@ -43,18 +43,17 @@ class Master
   end
 
   def perform_message
-    year = Time.now.year
     if @text.match?(Regexp.new(RussianDate::MONTHS.join('|')))
       choose_date
     elsif @text.start_with?('Записать на')
       date, time = @text.sub('Записать на ', '').split
       MongoClient.switch("#{date} #{time}")
       @bot.api.send_message(chat_id: MASTER_ID, text: 'Напишите описание для записи')
-    elsif @text.match?(/\d{2}\.\d{2}\.#{year}$/)
+    elsif @text.match?(/\d{2}\.\d{2}\.\d{4}$/)
       choose_hour
-    elsif @text.match?(/\d{2}\.\d{2}\.#{year} \d{1,2}$/)
+    elsif @text.match?(/\d{2}\.\d{2}\.\d{4} \d{1,2}$/)
       choose_minute
-    elsif @text.match?(/^\d{2}\.\d{2}\.#{year} \d{1,2}:\d{1,2}$/)
+    elsif @text.match?(/^\d{2}\.\d{2}\.\d{4} \d{1,2}:\d{1,2}$/)
       add_slot
     elsif @text == 'Показать расписание и записи'
       active_and_reserved_slots = MongoClient.active_and_reserved_slots

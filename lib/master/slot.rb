@@ -77,10 +77,15 @@ module Slot
     return unless slots.any?
 
     text += slots
+    active_slots = MongoClient.active_slots
+    kb = active_slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Записаться на #{s['russian_datetime']}")] }
+    kb << [Telegram::Bot::Types::KeyboardButton.new(text: 'Назад')]
+    markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
+
     MongoClient.show_users.each do |user|
       next if user['id'] == MASTER_ID
 
-      send_schedule(chat_id: user['id'], text: text.join("\n"))
+      send_schedule(chat_id: user['id'], text: text.join("\n"), reply_markup: markup)
     end
     MongoClient.set_pushed
     @bot.api.send_message(chat_id: MASTER_ID, text: 'Расписание разослано!')

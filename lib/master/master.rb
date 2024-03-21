@@ -2,6 +2,7 @@
 
 class Master
   include Slot
+  include ::Client::Options
 
   OPTIONS = %w[
     Добавить\ слот Показать\ расписание\ и\ записи

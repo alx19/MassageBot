@@ -4,7 +4,7 @@ MONGO = Mongo::Client.new(MONGO_URL)
 
 class MongoClient
   class << self
-    def reserve_via_date_time(date:, time:, link: '', username: nil , id: '')
+    def reserve_via_date_time(date:, time:, link: '', username: nil, id: '')
       MONGO['slots'].update_one(
         { date: date, time: time },
         { '$set' => { state: 'reserved', link: link, id: id, username: username } }
@@ -102,16 +102,6 @@ class MongoClient
       ).to_a
     end
 
-    def not_pushed
-      MONGO['slots'].find(
-        {
-          state: 'active',
-          unix_timestamp: { '$gt' => Time.now.utc.to_i },
-          pushed: false
-        }
-      ).to_a
-    end
-
     def not_reminded
       MONGO['slots'].find(
         {
@@ -130,10 +120,6 @@ class MongoClient
         },
         { '$set' => { reminded: true } }
       )
-    end
-
-    def set_pushed
-      MONGO['slots'].update_many({ pushed: false }, { '$set' => { pushed: true } })
     end
 
     def remove_slot(dt)

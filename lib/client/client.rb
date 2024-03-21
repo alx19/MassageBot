@@ -3,16 +3,9 @@ module Client
     include Path
     include Contraindications
     include Registration
+    include Options
     #include Payment::Course
     include Faq
-
-    OPTIONS = %w[
-      Расписание\ и\ запись Мои\ записи
-      Стоимость\ и\ время Схема\ проезда
-      Отменить\ запись Подарочный\ сертификат
-      Противопоказания Курсы\ массажа
-      Вопросы\ о\ массаже
-    ]
 
     def initialize(bot:, message:)
       @bot = bot
@@ -151,9 +144,7 @@ module Client
     end
 
     def show_options
-      kb = OPTIONS.map { |o| Telegram::Bot::Types::KeyboardButton.new(text: o) }
-      markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb.each_slice(2).to_a, one_time_keyboard: true)
-      send_message(chat_id: @chat_id, text: 'Что вы хотите сделать?', reply_markup: markup)
+      send_message(chat_id: @chat_id, text: 'Что вы хотите сделать?', reply_markup: client_options_keyboard)
     end
 
     def show_my_appointments

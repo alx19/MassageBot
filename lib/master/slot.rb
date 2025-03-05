@@ -5,7 +5,6 @@ module Slot
       date: date, time: time,
       russian_datetime: RussianDate.to_russian(@text),
       unix_timestamp: Time.parse("#{date} #{time}").to_i,
-      pushed: false,
       reminded: false
     )
     @bot.api.send_message(chat_id: MASTER_ID, text: "Слот на #{@text} создан.")
@@ -72,23 +71,17 @@ module Slot
   end
 
   def push_schedule
-    text = ['На связи Алиса и у меня появились новые слоты!', '']
-    slots = MongoClient.not_pushed.map { |np| np['russian_datetime'] }
-    return unless slots.any?
-
-    text += slots
-    active_slots = MongoClient.active_slots
-    kb = active_slots.map { |s| [Telegram::Bot::Types::KeyboardButton.new(text: "Записаться на #{s['russian_datetime']}")] }
-    kb << [Telegram::Bot::Types::KeyboardButton.new(text: 'Назад')]
-    markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
+    text = [
+      "На связи Алиса и у меня появились новые слоты!\n",
+      'Можете ознакомиться с ними нажав опцию "Расписание и запись":'
+    ]
 
     MongoClient.show_users.each do |user|
       next if user['id'] == MASTER_ID
 
-      send_schedule(chat_id: user['id'], text: text.join("\n"), reply_markup: markup)
+      send_schedule(chat_id: user['id'], text: text.join("\n"), reply_markup: client_options_keyboard)
     end
-    MongoClient.set_pushed
-    @bot.api.send_message(chat_id: MASTER_ID, text: 'Расписание разослано!')
+    @bot.api.send_message(chat_id: MASTER_ID, text: 'Уведомление о расписание разослано!')
     show_options
   end
 

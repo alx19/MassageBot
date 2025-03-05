@@ -18,6 +18,7 @@ MongoClient.not_reminded.each do |rem|
 rescue => e
   LOGGER.fatal('Caught exception:')
   LOGGER.fatal(e)
+  LOGGER.fatal("User ID: #{rem['id']} banned our bot!")
 end
 
 LOGGER.close

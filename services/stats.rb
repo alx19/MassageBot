@@ -14,6 +14,7 @@ CSV.open(csv_file, 'wb') do |csv|
 
   # Итерируемся по массиву хешей и записываем данные
   MongoClient.show_users.each do |hash|
+    next unless hash[:id]
     csv << [hash[:id], hash[:name], hash[:username], MongoClient.count_slots_by_id(hash[:id])]
   end
 end

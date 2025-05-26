@@ -41,14 +41,12 @@ module Client
           username = @message.from.username ? '' : "@#{@message.from.username} "
           MongoClient.add_calendar_event_id({ unix_timestamp: unix_timestamp }, result.id) if result
           send_message(chat_id: @chat_id, text: 'Спасибо за запись, @alicekoala будет ждать вас на массаж. За день до массажа напомню вам о нем')
-          send_message(chat_id: @chat_id, text: '🚘Также сообщаем вам, что мы переехали, подробнее по команде /location')
           send_message(chat_id: MASTER_ID, text: "<a href=\"tg://user?id=#{user['id']}\">#{user['name']}</a> #{username}записался на массаж #{russian_date}", parse_mode: 'HTML')
         end
         show_options
       when 'Расписание и запись', '/schedule'
         #send_message(chat_id: @chat_id, text: 'Алиса уехала из Москвы до начала марта. А как получить хороший массаж в её отсутствие, рассказала <a href="https://t.me/timetojmakjmak/273">тут</a>', parse_mode: 'HTML')
         send_schedule
-        send_message(chat_id: @chat_id, text: '🚘Также сообщаем вам, что мы переехали, подробнее по команде /location')
       when 'Схема проезда', '/location'
         send_path
         show_options
